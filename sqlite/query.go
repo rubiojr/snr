@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -20,6 +21,8 @@ func (b *SqliteBackend) QueryEvents(filter *nostr.Filter) (events []nostr.Event,
 		err = errors.New("filter cannot be null")
 		return
 	}
+
+	log.Printf("filter: %v", filter)
 
 	if filter.IDs != nil {
 		if len(filter.IDs) > 500 {
@@ -100,19 +103,20 @@ func (b *SqliteBackend) QueryEvents(filter *nostr.Filter) (events []nostr.Event,
 			return
 		}
 	}
+	log.Printf("tag query: %s", tagQuery)
 
-	if len(tagQuery) > 0 {
-		arrayBuild := make([]string, len(tagQuery))
-		for i, tagValue := range tagQuery {
-			arrayBuild[i] = "?"
-			params = append(params, tagValue)
-		}
+	//if len(tagQuery) > 0 {
+	//	arrayBuild := make([]string, len(tagQuery))
+	//	for i, tagValue := range tagQuery {
+	//		arrayBuild[i] = "?"
+	//		params = append(params, tagValue)
+	//	}
 
-		// we use a very bad implementation in which we only check the tag values and
-		// ignore the tag names
-		conditions = append(conditions,
-			"tagvalues && ARRAY["+strings.Join(arrayBuild, ",")+"]")
-	}
+	//	// we use a very bad implementation in which we only check the tag values and
+	//	// ignore the tag names
+	//	conditions = append(conditions,
+	//		"tagvalues && ARRAY["+strings.Join(arrayBuild, ",")+"]")
+	//}
 
 	if filter.Since != nil {
 		conditions = append(conditions, "created_at > ?")
