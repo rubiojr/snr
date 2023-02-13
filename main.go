@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/rubiojr/snr/sqlite"
 
@@ -36,14 +35,14 @@ func (r *Relay) Init() error {
 	}
 
 	// every hour, delete all very old events
-	go func() {
-		db := r.Storage().(*sqlite.SqliteBackend)
+	//go func() {
+	//	db := r.Storage().(*sqlite.SqliteBackend)
 
-		for {
-			time.Sleep(60 * time.Minute)
-			db.DB.Exec(`DELETE FROM event WHERE created_at < $1`, time.Now().AddDate(0, -3, 0).Unix()) // 3 months
-		}
-	}()
+	//	for {
+	//		time.Sleep(60 * time.Minute)
+	//		db.DB.Exec(`DELETE FROM event WHERE created_at < $1`, time.Now().AddDate(0, -3, 0).Unix()) // 3 months
+	//	}
+	//}()
 
 	return nil
 }
