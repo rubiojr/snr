@@ -5,6 +5,7 @@ import (
 
 	"github.com/fiatjaf/relayer/storage"
 	"github.com/nbd-wtf/go-nostr"
+	"golang.org/x/exp/slog"
 )
 
 func (b *SqliteBackend) SaveEvent(evt *nostr.Event) error {
@@ -45,9 +46,10 @@ func (b *SqliteBackend) BeforeSave(evt *nostr.Event) {
 }
 
 func (b *SqliteBackend) AfterSave(evt *nostr.Event) {
+	slog.Debug("saved event", "pubkey", evt.PubKey, "kind", evt.Kind)
 	// delete all but the 100 most recent ones for each key
-	b.DB.Exec(`DELETE FROM event WHERE pubkey = $1 AND kind = $2 AND created_at < (
-      SELECT created_at FROM event WHERE pubkey = $1
-      ORDER BY created_at DESC OFFSET 100 LIMIT 1
-    )`, evt.PubKey, evt.Kind)
+	//b.DB.Exec(`DELETE FROM event WHERE pubkey = $1 AND kind = $2 AND created_at < (
+	//    SELECT created_at FROM event WHERE pubkey = $1
+	//    ORDER BY created_at DESC OFFSET 100 LIMIT 1
+	//  )`, evt.PubKey, evt.Kind)
 }

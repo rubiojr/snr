@@ -2,10 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/rubiojr/snr/sqlite"
+	"golang.org/x/exp/slog"
 
 	"github.com/fiatjaf/relayer"
 	"github.com/kelseyhightower/envconfig"
@@ -58,6 +61,17 @@ func (r *Relay) AcceptEvent(evt *nostr.Event) bool {
 }
 
 func main() {
+	var d bool
+	flag.BoolVar(&d, "debug", false, "Debugging enabled")
+	flag.Parse()
+
+	logLevel := new(slog.LevelVar)
+	if d {
+		logLevel.Set(slog.LevelDebug)
+	}
+	h := slog.HandlerOptions{Level: logLevel}.NewTextHandler(os.Stderr)
+	slog.SetDefault(slog.New(h))
+
 	r := Relay{}
 	if err := envconfig.Process("", &r); err != nil {
 		log.Fatalf("failed to read from env: %v", err)

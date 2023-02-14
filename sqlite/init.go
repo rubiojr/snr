@@ -6,14 +6,11 @@ import (
 )
 
 func (b *SqliteBackend) Init() error {
-	db, err := sqlx.Connect("sqlite", b.DatabaseURL)
+	var err error
+	b.DB, err = sqlx.Connect("sqlite", b.DatabaseURL)
 	if err != nil {
 		return err
 	}
-
-	// sqlx default is 0 (unlimited), while postgresql by default accepts up to 100 connections
-	db.SetMaxOpenConns(80)
-	b.DB = db
 
 	_, err = b.DB.Exec(`
 	CREATE TABLE IF NOT EXISTS event(

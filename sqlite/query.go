@@ -5,10 +5,11 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 	"time"
+
+	"golang.org/x/exp/slog"
 
 	"github.com/nbd-wtf/go-nostr"
 )
@@ -21,8 +22,6 @@ func (b *SqliteBackend) QueryEvents(filter *nostr.Filter) (events []nostr.Event,
 		err = errors.New("filter cannot be null")
 		return
 	}
-
-	log.Printf("filter: %v", filter)
 
 	if filter.IDs != nil {
 		if len(filter.IDs) > 500 {
@@ -103,7 +102,7 @@ func (b *SqliteBackend) QueryEvents(filter *nostr.Filter) (events []nostr.Event,
 			return
 		}
 	}
-	log.Printf("tag query: %s", tagQuery)
+	slog.Debug("query", "tag", tagQuery, "filter", filter)
 
 	//if len(tagQuery) > 0 {
 	//	arrayBuild := make([]string, len(tagQuery))
