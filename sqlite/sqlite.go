@@ -9,23 +9,23 @@ import (
 
 var (
 	stmtCacheHits = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "stmt_cache_hits",
+		Name: "snr_stmt_cache_hits",
 		Help: "Prepared statements cache hits",
 	})
 	stmtCacheTotal = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "stmt_cache_queries",
+		Name: "snr_stmt_cache_queries",
 		Help: "Prepared statements cache queries",
 	})
 	stmtCachePrepared = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "stmt_cache_prepared",
+		Name: "snr_stmt_cache_prepared",
 		Help: "Prepared statements cached",
 	})
 	stmtCacheEvicted = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "stmt_cache_evicted",
+		Name: "snr_stmt_cache_evicted",
 		Help: "Evicted prepared statements",
 	})
 	dbEventsStored = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "db_events_stored",
+		Name: "snr_db_events_stored",
 		Help: "Database events stored",
 	})
 )
