@@ -24,6 +24,10 @@ var (
 		Name: "stmt_cache_evicted",
 		Help: "Evicted prepared statements",
 	})
+	dbEventsStored = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "db_events_stored",
+		Help: "Database events stored",
+	})
 )
 
 type SqliteBackend struct {
