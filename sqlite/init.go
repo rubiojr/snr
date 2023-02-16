@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -13,11 +14,17 @@ const driverOpts = "?_pragma=foreign_keys(1)&_pragma=journal_mode(wal)&cache=sha
 func (b *SqliteBackend) Init() error {
 	var err error
 
-	b.cache = cache.New(12*time.Hour, 24*time.Hour)
+	b.cache = cache.New(30*time.Minute, 60*time.Minute)
 	b.DB, err = sqlx.Connect("sqlite", b.DatabaseURL+driverOpts)
 	if err != nil {
 		return err
 	}
+
+	b.cache.OnEvicted(func(key string, pq any) {
+		prep := pq.(*sql.Stmt)
+		prep.Close()
+		stmtCacheEvicted.Inc()
+	})
 
 	_, err = b.DB.Exec(`
 	CREATE TABLE IF NOT EXISTS event(

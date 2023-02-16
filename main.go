@@ -5,8 +5,10 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rubiojr/snr/sqlite"
 	"golang.org/x/exp/slog"
 
@@ -65,6 +67,11 @@ func (r *Relay) AcceptEvent(evt *nostr.Event) bool {
 }
 
 func main() {
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		log.Println(http.ListenAndServe("localhost:2112", nil))
+	}()
+
 	var d bool
 	flag.BoolVar(&d, "debug", false, "Debugging enabled")
 	flag.Parse()

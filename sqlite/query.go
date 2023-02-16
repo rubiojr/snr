@@ -146,13 +146,16 @@ func (b *SqliteBackend) QueryEvents(filter *nostr.Filter) (events []nostr.Event,
 		" ORDER BY created_at DESC LIMIT ?")
 
 	qh := fmt.Sprintf("%x", sha256.Sum256([]byte(query)))
+	stmtCacheTotal.Inc()
 	pq, found := b.cache.Get(qh)
 	var prep *sql.Stmt
 	if found {
+		stmtCacheHits.Inc()
 		slog.Debug("found cached prepared statement", "id", qh)
 		prep = pq.(*sql.Stmt)
 	} else {
 		slog.Debug("Preparing query", "query", qh)
+		stmtCachePrepared.Inc()
 		prep, err = b.DB.Prepare(query)
 		if err != nil {
 			panic(err)
