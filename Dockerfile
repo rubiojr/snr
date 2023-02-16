@@ -14,6 +14,8 @@ WORKDIR /data
 VOLUME /data
 
 EXPOSE 7447/tcp
+# Prometheus exporter
+EXPOSE 2112/tcp
 
 ENV SQLITE_DATABASE=/data/snr.db
 ENTRYPOINT [ "/usr/local/bin/snr" ]
