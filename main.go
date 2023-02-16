@@ -69,7 +69,7 @@ func (r *Relay) AcceptEvent(evt *nostr.Event) bool {
 func main() {
 	go func() {
 		http.Handle("/metrics", promhttp.Handler())
-		log.Println(http.ListenAndServe("localhost:2112", nil))
+		log.Println(http.ListenAndServe(":2112", nil))
 	}()
 
 	var d bool
