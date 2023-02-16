@@ -37,6 +37,7 @@ func (r *Relay) Init() error {
 		return fmt.Errorf("couldn't process envconfig: %w", err)
 	}
 
+	// FIXME: feature flag this
 	// every hour, delete all very old events
 	//go func() {
 	//	db := r.Storage().(*sqlite.SqliteBackend)
@@ -50,8 +51,11 @@ func (r *Relay) Init() error {
 	return nil
 }
 
+// FIXME: feature flag this
 func (r *Relay) AcceptEvent(evt *nostr.Event) bool {
 	// block events that are too large
+	// FIXME: optimize this, perhaps sending and optimization upstream
+	// to store the json length before unmarshaling
 	jsonb, _ := json.Marshal(evt)
 	if len(jsonb) > 10000 {
 		return false

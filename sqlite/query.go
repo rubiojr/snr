@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
 	"errors"
@@ -12,6 +13,7 @@ import (
 	"golang.org/x/exp/slog"
 
 	"github.com/nbd-wtf/go-nostr"
+	"github.com/patrickmn/go-cache"
 )
 
 func (b *SqliteBackend) QueryEvents(filter *nostr.Filter) (events []nostr.Event, err error) {
@@ -143,7 +145,22 @@ func (b *SqliteBackend) QueryEvents(filter *nostr.Filter) (events []nostr.Event,
 		strings.Join(conditions, " AND ") +
 		" ORDER BY created_at DESC LIMIT ?")
 
-	rows, err := b.DB.Query(query, params...)
+	qh := fmt.Sprintf("%x", sha256.Sum256([]byte(query)))
+	pq, found := b.cache.Get(qh)
+	var prep *sql.Stmt
+	if found {
+		slog.Debug("found cached prepared statement", "id", qh)
+		prep = pq.(*sql.Stmt)
+	} else {
+		slog.Debug("Preparing query", "query", qh)
+		prep, err = b.DB.Prepare(query)
+		if err != nil {
+			panic(err)
+		}
+		b.cache.Set(qh, prep, cache.DefaultExpiration)
+	}
+
+	rows, err := prep.Query(params...)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, fmt.Errorf("failed to fetch events using query %q: %w", query, err)
 	}
@@ -162,5 +179,6 @@ func (b *SqliteBackend) QueryEvents(filter *nostr.Filter) (events []nostr.Event,
 		events = append(events, evt)
 	}
 
+	slog.Debug("events found", "count", len(events))
 	return events, nil
 }

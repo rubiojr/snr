@@ -1,13 +1,20 @@
 package sqlite
 
 import (
+	"time"
+
 	"github.com/jmoiron/sqlx"
+	"github.com/patrickmn/go-cache"
 	_ "modernc.org/sqlite"
 )
 
+const driverOpts = "?_pragma=foreign_keys(1)&_pragma=journal_mode(wal)&cache=shared"
+
 func (b *SqliteBackend) Init() error {
 	var err error
-	b.DB, err = sqlx.Connect("sqlite", b.DatabaseURL)
+
+	b.cache = cache.New(12*time.Hour, 24*time.Hour)
+	b.DB, err = sqlx.Connect("sqlite", b.DatabaseURL+driverOpts)
 	if err != nil {
 		return err
 	}
