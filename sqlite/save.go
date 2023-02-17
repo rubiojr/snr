@@ -47,6 +47,7 @@ func (b *SqliteBackend) BeforeSave(evt *nostr.Event) {
 
 func (b *SqliteBackend) AfterSave(evt *nostr.Event) {
 	dbEventsStored.Inc()
+	dbEventsTotal.Inc()
 	slog.Debug("saved event", "pubkey", evt.PubKey, "kind", evt.Kind)
 	// delete all but the 100 most recent ones for each key
 	//b.DB.Exec(`DELETE FROM event WHERE pubkey = $1 AND kind = $2 AND created_at < (

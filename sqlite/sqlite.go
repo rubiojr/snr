@@ -26,7 +26,11 @@ var (
 	})
 	dbEventsStored = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "snr_db_events_stored",
-		Help: "Database events stored",
+		Help: "Database events stored (since last restart)",
+	})
+	dbEventsTotal = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "snr_db_events_total",
+		Help: "Total database events stored",
 	})
 )
 

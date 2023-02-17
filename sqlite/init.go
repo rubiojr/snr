@@ -41,5 +41,13 @@ func (b *SqliteBackend) Init() error {
 	CREATE INDEX IF NOT EXISTS timeidx ON event (created_at DESC);
 	CREATE INDEX IF NOT EXISTS kindidx ON event (kind);
 	    `)
-	return err
+
+	var count uint64
+	err = b.DB.QueryRow("SELECT COUNT(*) FROM event").Scan(&count)
+	if err != nil {
+		return err
+	}
+	dbEventsTotal.Add(float64(count))
+
+	return nil
 }
