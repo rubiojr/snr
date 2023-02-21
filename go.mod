@@ -2,11 +2,16 @@ module github.com/rubiojr/snr
 
 go 1.19
 
+replace github.com/fiatjaf/relayer => /home/rubiojr/git/fiatjaf/relayer
+
 require (
 	github.com/fiatjaf/relayer v1.7.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/nbd-wtf/go-nostr v0.13.0
+	github.com/nbd-wtf/go-nostr v0.13.1
+	github.com/patrickmn/go-cache v2.1.1-0.20191004192108-46f407853014+incompatible
+	github.com/prometheus/client_golang v1.14.0
+	golang.org/x/exp v0.0.0-20230213192124-5e25df0256eb
 	modernc.org/sqlite v1.20.4
 )
 
@@ -26,15 +31,12 @@ require (
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
-	github.com/patrickmn/go-cache v2.1.1-0.20191004192108-46f407853014+incompatible // indirect
-	github.com/prometheus/client_golang v1.14.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/valyala/fastjson v1.6.3 // indirect
-	golang.org/x/exp v0.0.0-20230213192124-5e25df0256eb // indirect
 	golang.org/x/mod v0.6.0 // indirect
 	golang.org/x/sys v0.1.0 // indirect
 	golang.org/x/tools v0.2.0 // indirect
