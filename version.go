@@ -5,7 +5,7 @@ import (
 	"runtime/debug"
 )
 
-const Version = "0.2.3"
+const Version = "0.2.4"
 
 func version() string {
 	v := fmt.Sprintf("v%s", Version)
