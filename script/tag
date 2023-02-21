@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+if ! expr "$1" : "^v.\+" >/dev/null; then
+  echo "Invalid version."
+  exit 1
+fi
+echo "Tagging version $1"
+
+version=${1#v}
+sed -i "s/const Version.*/const Version = \"$version\"/" version.go
+
+git commit version.go -m "Tagged version $1"
+git tag "$1"
