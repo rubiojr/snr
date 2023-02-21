@@ -67,11 +67,6 @@ func (r *Relay) AcceptEvent(evt *nostr.Event) bool {
 }
 
 func main() {
-	go func() {
-		http.Handle("/metrics", promhttp.Handler())
-		log.Println(http.ListenAndServe(":2112", nil))
-	}()
-
 	var d, v bool
 	flag.BoolVar(&d, "debug", false, "Debugging enabled")
 	flag.BoolVar(&v, "version", false, "Print version")
@@ -81,6 +76,11 @@ func main() {
 		fmt.Println(version())
 		os.Exit(0)
 	}
+
+	go func() {
+		http.Handle("/metrics", promhttp.Handler())
+		log.Println(http.ListenAndServe(":2112", nil))
+	}()
 
 	logLevel := new(slog.LevelVar)
 	if d {
