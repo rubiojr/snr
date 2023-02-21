@@ -1,4 +1,10 @@
 #!/bin/sh
 set -e
+
+version="$1"
+if [ -z "$1" ]; then
+  version="latest"
+fi
+
 make
-docker build . -t ghcr.io/rubiojr/snr:latest
+docker build . -t ghcr.io/rubiojr/snr:$version

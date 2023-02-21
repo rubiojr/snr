@@ -1,5 +1,10 @@
 #!/bin/sh
 set -e
 
-./script/docker-build
-docker push ghcr.io/rubiojr/snr
+version="$1"
+if [ -z "$1" ]; then
+  version="latest"
+fi
+
+./script/docker-build "$version"
+docker push ghcr.io/rubiojr/snr:$version
