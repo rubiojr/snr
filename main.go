@@ -72,9 +72,15 @@ func main() {
 		log.Println(http.ListenAndServe(":2112", nil))
 	}()
 
-	var d bool
+	var d, v bool
 	flag.BoolVar(&d, "debug", false, "Debugging enabled")
+	flag.BoolVar(&v, "version", false, "Print version")
 	flag.Parse()
+
+	if v {
+		fmt.Println(version())
+		os.Exit(0)
+	}
 
 	logLevel := new(slog.LevelVar)
 	if d {
